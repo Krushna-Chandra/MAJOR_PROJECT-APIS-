@@ -29,8 +29,10 @@ function Login() {
       );
 
       if (res.data.status === "LOGIN SUCCESS") {
-        alert("Login successful");
-        navigate("/dashboard");
+        localStorage.setItem("token", res.data.access_token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        alert("Face Login successful");
+        navigate("/");
       } else {
         alert("Login failed: Face not matched");
       }
@@ -45,7 +47,7 @@ function Login() {
 
   return (
     <div style={{ padding: "40px", textAlign: "center" }}>
-      <h2>Login (Face Recognition)</h2>
+      <h2>Login with Face</h2>
 
       {!cameraOn && (
         <button onClick={() => setCameraOn(true)}>
@@ -71,12 +73,6 @@ function Login() {
           </button>
         </>
       )}
-
-      <br /><br />
-
-      <button onClick={() => navigate("/register")}>
-        Go to Register
-      </button>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 
 const QUESTIONS = [
   "Tell me about yourself.",
@@ -39,7 +39,7 @@ function Interview() {
     videoRef.current.srcObject = stream;
     videoRef.current.muted = true;
     videoRef.current.playsInline = true;
-    videoRef.current.play();
+    await videoRef.current.play();
   };
 
   /* ------------------ SCREEN SHARE ------------------ */
@@ -49,12 +49,28 @@ function Interview() {
     });
 
     // Stop immediately (permission only)
-    screenStream.getTracks().forEach(t => t.stop());
+    screenStream.getTracks().forEach((t) => t.stop());
     screenStreamRef.current = screenStream;
   };
 
+  /* ------------------ STOP & NEXT ------------------ */
+  const stopListening = useCallback(async () => {
+    recognitionRef.current?.stop();
+    clearTimeout(silenceTimerRef.current);
+
+    setStatus("Processing answer...");
+    await speak("Thank you.");
+
+    if (currentIndex < QUESTIONS.length - 1) {
+      setCurrentIndex((i) => i + 1);
+    } else {
+      setStatus("Interview completed.");
+      await speak("Your interview is completed. Thank you.");
+    }
+  }, [currentIndex]);
+
   /* ------------------ SPEECH RECOGNITION ------------------ */
-  const startListening = () => {
+  const startListening = useCallback(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -78,23 +94,7 @@ function Interview() {
 
     recognition.onerror = stopListening;
     recognition.start();
-  };
-
-  /* ------------------ STOP & NEXT ------------------ */
-  const stopListening = async () => {
-    recognitionRef.current?.stop();
-    clearTimeout(silenceTimerRef.current);
-
-    setStatus("Processing answer...");
-    await speak("Thank you.");
-
-    if (currentIndex < QUESTIONS.length - 1) {
-      setCurrentIndex(i => i + 1);
-    } else {
-      setStatus("Interview completed.");
-      await speak("Your interview is completed. Thank you.");
-    }
-  };
+  }, [stopListening]);
 
   /* ------------------ MAIN FLOW ------------------ */
   useEffect(() => {
@@ -107,7 +107,7 @@ function Interview() {
     };
 
     run();
-  }, [started, currentIndex]);
+  }, [started, currentIndex, startListening]);
 
   /* ------------------ START INTERVIEW ------------------ */
   const beginInterview = async () => {
@@ -124,7 +124,7 @@ function Interview() {
   /* ------------------ CLEANUP ------------------ */
   useEffect(() => {
     return () => {
-      cameraStreamRef.current?.getTracks().forEach(t => t.stop());
+      cameraStreamRef.current?.getTracks().forEach((t) => t.stop());
       recognitionRef.current?.stop();
       clearTimeout(silenceTimerRef.current);
     };
@@ -136,11 +136,7 @@ function Interview() {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {!started && (
-        <button onClick={beginInterview}>
-          Start Interview
-        </button>
-      )}
+      {!started && <button onClick={beginInterview}>Start Interview</button>}
 
       {started && (
         <>

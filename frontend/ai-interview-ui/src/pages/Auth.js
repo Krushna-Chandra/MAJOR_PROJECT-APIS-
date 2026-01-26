@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../App.css";
 
 function Auth() {
@@ -10,9 +11,9 @@ function Auth() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!email || !password || (!isLogin && !confirmPassword)) {
-      alert("Please fill all fields");
+      alert("Fill all fields");
       return;
     }
 
@@ -21,16 +22,27 @@ function Auth() {
       return;
     }
 
-    // Mock authentication (frontend only for now)
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        name: email.split("@")[0],
-        email
-      })
-    );
+    try {
+      if (isLogin) {
+        const res = await axios.post("http://127.0.0.1:8000/login", null, {
+          params: { email, password }
+        });
 
-    navigate("/");
+        localStorage.setItem("token", res.data.access_token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
+        navigate("/");
+      } else {
+        await axios.post("http://127.0.0.1:8000/register", null, {
+          params: { email, password }
+        });
+
+        alert("Registered successfully. Now login.");
+        setIsLogin(true);
+      }
+    } catch (err) {
+      alert(err.response?.data?.detail || "Auth failed");
+    }
   };
 
   return (
@@ -52,7 +64,6 @@ function Auth() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        {/* CONFIRM PASSWORD ONLY FOR REGISTER */}
         {!isLogin && (
           <input
             type="password"
@@ -73,9 +84,7 @@ function Auth() {
             setConfirmPassword("");
           }}
         >
-          {isLogin
-            ? "New user? Register"
-            : "Already registered? Sign In"}
+          {isLogin ? "New user? Register" : "Already registered? Sign In"}
         </p>
       </div>
     </div>

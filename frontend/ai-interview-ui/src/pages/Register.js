@@ -17,6 +17,12 @@ function Register() {
       return;
     }
 
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login first");
+      return;
+    }
+
     setLoading(true);
     try {
       const blob = await fetch(imageSrc).then(res => res.blob());
@@ -25,11 +31,16 @@ function Register() {
 
       const res = await axios.post(
         "http://127.0.0.1:8000/register-face",
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        }
       );
 
       alert(res.data.status || "Face Registered");
-      navigate("/login");
+      navigate("/");
 
     } catch (err) {
       alert("Registration failed");
@@ -41,7 +52,7 @@ function Register() {
 
   return (
     <div style={{ padding: "40px", textAlign: "center" }}>
-      <h2>Register (Face Recognition)</h2>
+      <h2>Register Face (Linked to Account)</h2>
 
       {!cameraOn && (
         <button onClick={() => setCameraOn(true)}>
@@ -67,12 +78,6 @@ function Register() {
           </button>
         </>
       )}
-
-      <br /><br />
-
-      <button onClick={() => navigate("/login")}>
-        Go to Login
-      </button>
     </div>
   );
 }
