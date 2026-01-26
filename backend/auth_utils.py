@@ -1,0 +1,24 @@
+from passlib.context import CryptContext
+from jose import jwt
+from datetime import datetime, timedelta
+
+SECRET_KEY = "APIS_SUPER_SECRET_KEY_CHANGE_THIS"
+ALGORITHM = "HS256"
+
+# ✅ Use pbkdf2_sha256 instead of bcrypt (Python 3.12 safe)
+pwd_context = CryptContext(
+    schemes=["pbkdf2_sha256"],
+    deprecated="auto"
+)
+
+def hash_password(password: str):
+    return pwd_context.hash(password)
+
+def verify_password(password: str, hashed: str):
+    return pwd_context.verify(password, hashed)
+
+def create_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(days=7)
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

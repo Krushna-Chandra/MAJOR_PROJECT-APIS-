@@ -41,25 +41,23 @@ function Dashboard() {
 
   /* ---------- LOGOUT ---------- */
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("profileImage");
+    localStorage.clear();
     setUser(null);
-    setProfileImage(null);
-    setShowProfile(false);
+    navigate("/auth");
   };
+
+  const userInitial = user?.email ? user.email[0].toUpperCase() : "U";
+  const userDisplayName = user?.email
+    ? user.email.split("@")[0]
+    : "User";
 
   return (
     <>
       {/* NAVBAR */}
       <div className="navbar">
-        <h2>AI Interview System</h2>
+        <h2>APIS - AI Powered Interview System</h2>
 
         <div className="nav-right">
-          {!user && (
-            <button onClick={() => navigate("/auth")}>Sign In</button>
-          )}
-
-          {/* PROFILE */}
           <div className="profile-area" ref={popupRef}>
             <div
               className="profile-icon"
@@ -67,14 +65,12 @@ function Dashboard() {
             >
               {profileImage ? (
                 <img src={profileImage} alt="profile" />
-              ) : user ? (
-                user.name[0].toUpperCase()
               ) : (
-                "👤"
+                userInitial
               )}
             </div>
 
-            {user && <span className="username">{user.name}</span>}
+            <span className="username">{userDisplayName}</span>
 
             {showProfile && (
               <div className="profile-popup">
@@ -92,17 +88,11 @@ function Dashboard() {
                   />
                 </label>
 
-                <button
-                  className="edit-profile-btn"
-                  onClick={() => alert("Edit profile clicked")}
-                >
+                <button className="edit-profile-btn">
                   Edit Profile
                 </button>
 
-                <button
-                  className="logout-btn"
-                  onClick={handleLogout}
-                >
+                <button className="logout-btn" onClick={handleLogout}>
                   Logout
                 </button>
               </div>
@@ -113,11 +103,8 @@ function Dashboard() {
 
       {/* HERO */}
       <div className="hero">
-        <h1>Welcome to AI Interview Platform</h1>
-        <p>
-          Practice interviews with AI-powered voice, facial, and performance
-          analysis.
-        </p>
+        <h1>Welcome to APIS</h1>
+        <p>AI Powered Interview Practice Platform</p>
       </div>
 
       {/* CATEGORIES */}
@@ -125,25 +112,44 @@ function Dashboard() {
         <h2 style={{ textAlign: "center" }}>Interview Categories</h2>
 
         <div className="category-grid">
-          <div className="category-card" onClick={() => navigate("/auth")}>
+          <div
+            className="category-card"
+            onClick={() => navigate("/topics/hr")}
+          >
             <h3>HR Interview</h3>
             <p>Communication & personality questions</p>
           </div>
 
-          <div className="category-card" onClick={() => navigate("/auth")}>
+          <div
+            className="category-card"
+            onClick={() => navigate("/topics/technical")}
+          >
             <h3>Technical Interview</h3>
             <p>Programming & technical concepts</p>
           </div>
 
-          <div className="category-card" onClick={() => navigate("/auth")}>
+          <div
+            className="category-card"
+            onClick={() => navigate("/topics/behavioral")}
+          >
             <h3>Behavioral Interview</h3>
             <p>Situational & leadership questions</p>
+          </div>
+
+          <div
+            className="category-card"
+            onClick={() => navigate("/register-face")}
+          >
+            <h3>Register Face</h3>
+            <p>Link your face to your account</p>
           </div>
         </div>
       </div>
 
       {/* FOOTER */}
-      <div className="footer">© 2026 AI Interview System</div>
+      <div className="footer">
+        © 2026 APIS - AI Powered Interview System
+      </div>
     </>
   );
 }
