@@ -206,3 +206,33 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# =====================
+# ENV FILES
+# =====================
+.env
+.env.*
+
+# =====================
+# PYTHON
+# =====================
+__pycache__/
+*.py[codz]
+
+# =====================
+# BACKEND RUNTIME DATA
+# =====================
+uploads/
+face_db/
+
+# =====================
+# NODE / FRONTEND
+# =====================
+node_modules/
+
+# =====================
+# OS FILES
+# =====================
+.DS_Store
+Thumbs.db
