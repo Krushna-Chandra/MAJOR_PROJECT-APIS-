@@ -1,9 +1,18 @@
 from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta
+import os
+from dotenv import load_dotenv
 
-SECRET_KEY = "APIS_SUPER_SECRET_KEY_CHANGE_THIS"
+# ---------------- LOAD ENV ----------------
+load_dotenv()
+
+# ---------------- CONSTANTS ----------------
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
+
+if not SECRET_KEY:
+    raise Exception("SECRET_KEY not found in .env file")
 
 # ✅ Use pbkdf2_sha256 instead of bcrypt (Python 3.12 safe)
 pwd_context = CryptContext(
@@ -11,12 +20,14 @@ pwd_context = CryptContext(
     deprecated="auto"
 )
 
+# ---------------- PASSWORD UTILS ----------------
 def hash_password(password: str):
     return pwd_context.hash(password)
 
 def verify_password(password: str, hashed: str):
     return pwd_context.verify(password, hashed)
 
+# ---------------- JWT TOKEN ----------------
 def create_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(days=7)

@@ -1,16 +1,19 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+import os
+from motor.motor_asyncio import AsyncIOMotorClient
+from dotenv import load_dotenv
 
-DB_USER = "postgres"
-DB_PASSWORD = "krushna123"   # ⚠️ @ replaced with %40
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_NAME = "apis_db"
+# ---------------- LOAD ENV ----------------
+load_dotenv()
 
-SQLALCHEMY_DATABASE_URL = (
-    f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+# ---------------- READ MONGO URL ----------------
+MONGO_URL = os.getenv("MONGO_URL")
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+if not MONGO_URL:
+    raise Exception("MONGO_URL not found in .env file")
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# ---------------- CONNECT DB ----------------
+client = AsyncIOMotorClient(MONGO_URL)
+db = client["apis_db"]
+
+# ---------------- COLLECTIONS ----------------
+users_collection = db["users"]
