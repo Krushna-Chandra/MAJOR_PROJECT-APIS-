@@ -240,3 +240,34 @@ button {
   cursor: pointer;
 }
 
+/* ============================= */
+/* AUTH PAGE – SIGN UP ENHANCEMENTS */
+/* ============================= */
+
+/* Group first & last name fields */
+.auth-name-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* Make name inputs equal width */
+.auth-name-row input {
+  flex: 1;
+}
+
+/* Slight visual separation for signup fields */
+.auth-card input {
+  transition: border-color 0.2s ease;
+}
+
+.auth-card input:focus {
+  outline: none;
+  border-color: #4b6cb7;
+}
+
+/* Optional: smoother button hover */
+.auth-card button:hover {
+  opacity: 0.95;
+}
+
+

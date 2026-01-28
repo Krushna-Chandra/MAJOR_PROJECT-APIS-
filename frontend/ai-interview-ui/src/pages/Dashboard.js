@@ -47,7 +47,11 @@ function Dashboard() {
   };
 
   const userInitial = user?.email ? user.email[0].toUpperCase() : "U";
-  const userDisplayName = user?.email
+  // Display full name if available, else fallback to email
+const userDisplayName =
+  user?.first_name && user?.last_name
+    ? `${user.first_name} ${user.last_name}`
+    : user?.email
     ? user.email.split("@")[0]
     : "User";
 
