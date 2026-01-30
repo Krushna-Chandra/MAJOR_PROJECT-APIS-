@@ -14,7 +14,7 @@ ALGORITHM = "HS256"
 if not SECRET_KEY:
     raise Exception("SECRET_KEY not found in .env file")
 
-# ✅ Use pbkdf2_sha256 instead of bcrypt (Python 3.12 safe)
+# ✅ Python 3.12 safe
 pwd_context = CryptContext(
     schemes=["pbkdf2_sha256"],
     deprecated="auto"

@@ -9,6 +9,8 @@ import Interview from "./pages/Interview";
 import Permissions from "./pages/Permissions";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import EditProfile from "./pages/EditProfile";
+
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -17,19 +19,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* PUBLIC ROUTES */}
+        <Route path="/" element={<Dashboard />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/login" element={<Login />} />
 
         {/* PROTECTED ROUTES */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
         <Route
           path="/register-face"
           element={
@@ -74,6 +68,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <EditProfile />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );

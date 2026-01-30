@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
+import axios from "axios";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -11,49 +12,90 @@ function Dashboard() {
   );
 
   const [showProfile, setShowProfile] = useState(false);
+
   const [profileImage, setProfileImage] = useState(
-    localStorage.getItem("profileImage")
+  user?.profile_image || null
   );
 
-  /* ---------- CLOSE POPUP ON OUTSIDE CLICK ---------- */
+
+  /* ---------- CLOSE PROFILE POPUP ON OUTSIDE CLICK ---------- */
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (popupRef.current && !popupRef.current.contains(e.target)) {
         setShowProfile(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   /* ---------- IMAGE UPLOAD ---------- */
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const handleImageUpload = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setProfileImage(reader.result);
-      localStorage.setItem("profileImage", reader.result);
-    };
-    reader.readAsDataURL(file);
+  const reader = new FileReader();
+  reader.onloadend = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.put(
+        "http://127.0.0.1:8000/profile",
+        {
+          profile_image: reader.result
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        }
+      );
+
+      // update localStorage + state
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      setUser(res.data.user);
+      setProfileImage(res.data.user.profile_image);
+      setShowProfile(false);
+    } catch (err) {
+      alert("Failed to update profile image");
+    }
   };
+
+  reader.readAsDataURL(file);
+};
+
 
   /* ---------- LOGOUT ---------- */
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
-    navigate("/auth");
+    setShowProfile(false);
+    navigate("/");
   };
 
-  const userInitial = user?.email ? user.email[0].toUpperCase() : "U";
-  // Display full name if available, else fallback to email
-const userDisplayName =
-  user?.first_name && user?.last_name
-    ? `${user.first_name} ${user.last_name}`
-    : user?.email
-    ? user.email.split("@")[0]
-    : "User";
+  const userInitial = user?.email
+    ? user.email[0].toUpperCase()
+    : "U";
+
+  const nameMode = user?.name_update_mode;
+
+  let userDisplayName = "User";
+
+  if (nameMode === "first_only") {
+    userDisplayName = user.first_name;
+  } else if (nameMode === "full") {
+    userDisplayName = `${user.first_name} ${user.last_name}`;
+  } else if (user?.first_name && user?.last_name) {
+    userDisplayName = `${user.first_name} ${user.last_name}`;
+  } else if (user?.first_name) {
+    userDisplayName = user.first_name;
+  } else if (user?.email) {
+    userDisplayName = user.email.split("@")[0];
+  }
+
 
   return (
     <>
@@ -62,46 +104,65 @@ const userDisplayName =
         <h2>APIS - AI Powered Interview System</h2>
 
         <div className="nav-right">
-          <div className="profile-area" ref={popupRef}>
-            <div
-              className="profile-icon"
-              onClick={() => setShowProfile(!showProfile)}
-            >
-              {profileImage ? (
-                <img src={profileImage} alt="profile" />
-              ) : (
-                userInitial
+          {!user ? (
+            <button onClick={() => navigate("/auth")}>
+              Sign In / Sign Up
+            </button>
+          ) : (
+            <div className="profile-area" ref={popupRef}>
+              <div
+                className="profile-icon"
+                onClick={() =>
+                  setShowProfile((prev) => !prev)
+                }
+              >
+                {profileImage ? (
+                  <img src={profileImage} alt="profile" />
+                ) : (
+                  userInitial
+                )}
+              </div>
+
+              <span className="username">
+                {userDisplayName}
+              </span>
+
+              {showProfile && (
+                <div className="profile-popup">
+                  <label className="profile-image-placeholder">
+                    {profileImage ? (
+                      <img
+                        src={profileImage}
+                        alt="preview"
+                      />
+                    ) : (
+                      "+"
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={handleImageUpload}
+                    />
+                  </label>
+
+                  <button
+                    className="edit-profile-btn"
+                    onClick={() => navigate("/profile")}
+                  >
+                    Edit Profile
+                  </button>
+
+                  <button
+                    className="logout-btn"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
               )}
             </div>
-
-            <span className="username">{userDisplayName}</span>
-
-            {showProfile && (
-              <div className="profile-popup">
-                <label className="profile-image-placeholder">
-                  {profileImage ? (
-                    <img src={profileImage} alt="preview" />
-                  ) : (
-                    "+"
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={handleImageUpload}
-                  />
-                </label>
-
-                <button className="edit-profile-btn">
-                  Edit Profile
-                </button>
-
-                <button className="logout-btn" onClick={handleLogout}>
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
@@ -113,7 +174,9 @@ const userDisplayName =
 
       {/* CATEGORIES */}
       <div className="container">
-        <h2 style={{ textAlign: "center" }}>Interview Categories</h2>
+        <h2 style={{ textAlign: "center" }}>
+          Interview Categories
+        </h2>
 
         <div className="category-grid">
           <div
@@ -126,7 +189,9 @@ const userDisplayName =
 
           <div
             className="category-card"
-            onClick={() => navigate("/topics/technical")}
+            onClick={() =>
+              navigate("/topics/technical")
+            }
           >
             <h3>Technical Interview</h3>
             <p>Programming & technical concepts</p>
@@ -134,19 +199,25 @@ const userDisplayName =
 
           <div
             className="category-card"
-            onClick={() => navigate("/topics/behavioral")}
+            onClick={() =>
+              navigate("/topics/behavioral")
+            }
           >
             <h3>Behavioral Interview</h3>
             <p>Situational & leadership questions</p>
           </div>
 
-          <div
-            className="category-card"
-            onClick={() => navigate("/register-face")}
-          >
-            <h3>Register Face</h3>
-            <p>Link your face to your account</p>
-          </div>
+          {user && (
+            <div
+              className="category-card"
+              onClick={() =>
+                navigate("/register-face")
+              }
+            >
+              <h3>Register Face</h3>
+              <p>Link your face to your account</p>
+            </div>
+          )}
         </div>
       </div>
 

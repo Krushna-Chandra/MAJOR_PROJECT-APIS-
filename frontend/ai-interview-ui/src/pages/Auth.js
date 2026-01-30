@@ -6,17 +6,14 @@ import "../App.css";
 function Auth() {
   const navigate = useNavigate();
 
-  /* ---------------- AUTH MODE ---------------- */
   const [isLogin, setIsLogin] = useState(true);
 
-  /* ---------------- FORM STATES ---------------- */
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  /* ---------------- CLEAR ALL INPUTS ---------------- */
   const clearFields = () => {
     setFirstName("");
     setLastName("");
@@ -25,15 +22,14 @@ function Auth() {
     setConfirmPassword("");
   };
 
-  /* ---------------- SUBMIT HANDLER ---------------- */
   const handleSubmit = async () => {
-    // Basic validation
+    // -------- BASIC VALIDATION --------
     if (
       !email ||
       !password ||
       (!isLogin && (!firstName || !lastName || !confirmPassword))
     ) {
-      alert("Fill all fields");
+      alert("Please fill all fields");
       return;
     }
 
@@ -43,12 +39,14 @@ function Auth() {
     }
 
     try {
-      /* ---------------- SIGN IN ---------------- */
+      // -------- LOGIN --------
       if (isLogin) {
         const res = await axios.post(
           "http://127.0.0.1:8000/login",
-          null,
-          { params: { email, password } }
+          {
+            email,
+            password
+          }
         );
 
         localStorage.setItem("token", res.data.access_token);
@@ -57,39 +55,38 @@ function Auth() {
         clearFields();
         navigate("/");
       }
-
-      /* ---------------- SIGN UP ---------------- */
+      // -------- REGISTER --------
       else {
         await axios.post(
           "http://127.0.0.1:8000/register",
-          null,
           {
-            params: {
-              first_name: firstName,
-              last_name: lastName,
-              email,
-              password
-            }
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            password
           }
         );
 
-        alert("Registered successfully. Now login.");
-
+        alert("Registered successfully. Please sign in.");
         clearFields();
         setIsLogin(true);
       }
     } catch (err) {
-      alert(err.response?.data?.detail || "Authentication failed");
+      const msg =
+        typeof err.response?.data?.detail === "string"
+          ? err.response.data.detail
+          : err.response?.data?.detail?.[0]?.msg ||
+            "Authentication failed";
+
+      alert(msg);
     }
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        {/* TITLE */}
         <h2>{isLogin ? "Sign In" : "Sign Up"}</h2>
 
-        {/* SIGN UP ONLY FIELDS */}
         {!isLogin && (
           <>
             <input
@@ -108,7 +105,6 @@ function Auth() {
           </>
         )}
 
-        {/* COMMON FIELDS */}
         <input
           type="email"
           placeholder="Email address"
@@ -123,7 +119,6 @@ function Auth() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        {/* CONFIRM PASSWORD (SIGN UP ONLY) */}
         {!isLogin && (
           <input
             type="password"
@@ -133,12 +128,10 @@ function Auth() {
           />
         )}
 
-        {/* SUBMIT BUTTON */}
         <button onClick={handleSubmit}>
           {isLogin ? "Sign In" : "Create Account"}
         </button>
 
-        {/* TOGGLE MODE */}
         <p
           className="link-text"
           onClick={() => {

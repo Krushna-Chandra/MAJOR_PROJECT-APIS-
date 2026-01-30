@@ -270,4 +270,7 @@ button {
   opacity: 0.95;
 }
 
+.remove-image-overlay:hover {
+  opacity: 1 !important;
+}
 
