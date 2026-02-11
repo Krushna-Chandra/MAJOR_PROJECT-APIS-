@@ -14,9 +14,8 @@ function Dashboard() {
   const [showProfile, setShowProfile] = useState(false);
 
   const [profileImage, setProfileImage] = useState(
-  user?.profile_image || null
+    user?.profile_image || null
   );
-
 
   /* ---------- CLOSE PROFILE POPUP ON OUTSIDE CLICK ---------- */
   useEffect(() => {
@@ -33,39 +32,38 @@ function Dashboard() {
 
   /* ---------- IMAGE UPLOAD ---------- */
   const handleImageUpload = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const reader = new FileReader();
-  reader.onloadend = async () => {
-    try {
-      const token = localStorage.getItem("token");
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-      const res = await axios.put(
-        "http://127.0.0.1:8000/profile",
-        {
-          profile_image: reader.result
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token
+        const res = await axios.put(
+          "http://127.0.0.1:8000/profile",
+          {
+            profile_image: reader.result
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + token
+            }
           }
-        }
-      );
+        );
 
-      // update localStorage + state
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      setUser(res.data.user);
-      setProfileImage(res.data.user.profile_image);
-      setShowProfile(false);
-    } catch (err) {
-      alert("Failed to update profile image");
-    }
+        // update localStorage + state
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        setUser(res.data.user);
+        setProfileImage(res.data.user.profile_image);
+        setShowProfile(false);
+      } catch (err) {
+        alert("Failed to update profile image");
+      }
+    };
+
+    reader.readAsDataURL(file);
   };
-
-  reader.readAsDataURL(file);
-};
-
 
   /* ---------- LOGOUT ---------- */
   const handleLogout = () => {
@@ -96,7 +94,6 @@ function Dashboard() {
     userDisplayName = user.email.split("@")[0];
   }
 
-
   return (
     <>
       {/* NAVBAR */}
@@ -112,9 +109,7 @@ function Dashboard() {
             <div className="profile-area" ref={popupRef}>
               <div
                 className="profile-icon"
-                onClick={() =>
-                  setShowProfile((prev) => !prev)
-                }
+                onClick={() => setShowProfile((prev) => !prev)}
               >
                 {profileImage ? (
                   <img src={profileImage} alt="profile" />
@@ -123,18 +118,13 @@ function Dashboard() {
                 )}
               </div>
 
-              <span className="username">
-                {userDisplayName}
-              </span>
+              <span className="username">{userDisplayName}</span>
 
               {showProfile && (
                 <div className="profile-popup">
                   <label className="profile-image-placeholder">
                     {profileImage ? (
-                      <img
-                        src={profileImage}
-                        alt="preview"
-                      />
+                      <img src={profileImage} alt="preview" />
                     ) : (
                       "+"
                     )}
@@ -153,10 +143,7 @@ function Dashboard() {
                     Edit Profile
                   </button>
 
-                  <button
-                    className="logout-btn"
-                    onClick={handleLogout}
-                  >
+                  <button className="logout-btn" onClick={handleLogout}>
                     Logout
                   </button>
                 </div>
@@ -174,14 +161,13 @@ function Dashboard() {
 
       {/* CATEGORIES */}
       <div className="container">
-        <h2 style={{ textAlign: "center" }}>
-          Interview Categories
-        </h2>
+        <h2 style={{ textAlign: "center" }}>Interview Categories</h2>
 
         <div className="category-grid">
+          {/* ✅ UPDATED NAVIGATION */}
           <div
             className="category-card"
-            onClick={() => navigate("/topics/hr")}
+            onClick={() => navigate("/hr-interview")}
           >
             <h3>HR Interview</h3>
             <p>Communication & personality questions</p>
@@ -189,9 +175,7 @@ function Dashboard() {
 
           <div
             className="category-card"
-            onClick={() =>
-              navigate("/topics/technical")
-            }
+            onClick={() => navigate("/technical-interview")}
           >
             <h3>Technical Interview</h3>
             <p>Programming & technical concepts</p>
@@ -199,9 +183,7 @@ function Dashboard() {
 
           <div
             className="category-card"
-            onClick={() =>
-              navigate("/topics/behavioral")
-            }
+            onClick={() => navigate("/behavioral-interview")}
           >
             <h3>Behavioral Interview</h3>
             <p>Situational & leadership questions</p>
@@ -210,9 +192,7 @@ function Dashboard() {
           {user && (
             <div
               className="category-card"
-              onClick={() =>
-                navigate("/register-face")
-              }
+              onClick={() => navigate("/register-face")}
             >
               <h3>Register Face</h3>
               <p>Link your face to your account</p>
