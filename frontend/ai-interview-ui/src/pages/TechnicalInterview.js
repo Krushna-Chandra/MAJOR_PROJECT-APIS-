@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
 
 import techImg from "../assets/tech.png";
-import mistakeImg from "../assets/mistake.png"; // ✅ Add Tech mistake illustration
+import mistakeImg from "../assets/mistake.png";
 
 function TechnicalInterview() {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ function TechnicalInterview() {
 
           <button
             className="mock-btn"
-            onClick={() => navigate("/instructions")}
+            onClick={() => navigate("/topics/technical")}
           >
             Start Technical Mock Interview →
           </button>
@@ -54,7 +54,7 @@ function TechnicalInterview() {
 
           <button
             className="small-start-btn"
-            onClick={() => navigate("/instructions")}
+            onClick={() => navigate("/topics/technical")}
           >
             Start Technical Mock Interview →
           </button>

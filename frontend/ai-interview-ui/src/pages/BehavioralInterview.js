@@ -33,7 +33,7 @@ function BehavioralInterview() {
 
           <button
             className="mock-btn"
-            onClick={() => navigate("/instructions")}
+            onClick={() => navigate("/topics/behavioral")}
           >
             Start Behavioral Mock Interview →
           </button>
@@ -53,7 +53,7 @@ function BehavioralInterview() {
 
           <button
             className="small-start-btn"
-            onClick={() => navigate("/instructions")}
+            onClick={() => navigate("/topics/behavioral")}
           >
             Start Behavioral Mock →
           </button>

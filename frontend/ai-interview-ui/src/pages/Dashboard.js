@@ -153,15 +153,82 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* HERO */}
-      <div className="hero">
-        <h1>Welcome to APIS</h1>
-        <p>AI Powered Interview Practice Platform</p>
+      {/* HERO - professional two-column layout */}
+      <div className="mock-hero violet-hero">
+        <div style={{ maxWidth: 720 }}>
+          <h1>Practice. Improve. Land the Job.</h1>
+          <p>
+            APIS helps you prepare for interviews with AI-driven feedback,
+            realistic mock interviews and face-based verification — all in one
+            polished experience.
+          </p>
+
+          <div style={{ marginTop: 22 }}>
+            <button className="mock-btn" onClick={() => navigate('/hr-interview')}>
+              Browse Categories
+            </button>
+            <button
+              className="mock-btn"
+              style={{ marginLeft: 12, background: 'rgba(255,255,255,0.18)', color: '#fff' }}
+              onClick={() => navigate('/topics/hr')}
+            >
+              Quick Interview
+            </button>
+          </div>
+        </div>
+
+        <div>
+          {/* simple illustrative SVG */}
+          <svg className="mock-hero-img" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0" stopColor="#fff" stopOpacity="0.18" />
+                <stop offset="1" stopColor="#fff" stopOpacity="0.06" />
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="600" height="400" rx="24" fill="url(#g1)" />
+            <g transform="translate(40,24)">
+              <rect x="0" y="0" width="260" height="160" rx="14" fill="#fff" opacity="0.12" />
+              <rect x="300" y="40" width="220" height="120" rx="14" fill="#fff" opacity="0.08" />
+              <circle cx="190" cy="220" r="70" fill="#fff" opacity="0.06" />
+              <g transform="translate(40,16)" fill="#fff" opacity="0.95">
+                <rect x="8" y="8" width="44" height="8" rx="4" />
+                <rect x="8" y="26" width="110" height="8" rx="4" />
+                <rect x="8" y="44" width="80" height="8" rx="4" />
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      {/* STATS / HIGHLIGHTS */}
+      <div style={{ maxWidth: 1100, margin: '30px auto 0', padding: '0 40px' }}>
+        <div className="mistake-box" style={{ gap: 18 }}>
+          <div>
+            <h3 style={{ margin: 0 }}>Trusted by learners worldwide</h3>
+            <p style={{ marginTop: 8, color: '#444' }}>Thousands of mock interviews, real feedback and measurable growth.</p>
+          </div>
+
+          <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 22, fontWeight: 800 }}>4.8</div>
+              <div style={{ fontSize: 12, color: '#555' }}>Average Rating</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 22, fontWeight: 800 }}>120k+</div>
+              <div style={{ fontSize: 12, color: '#555' }}>Practice Sessions</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 22, fontWeight: 800 }}>95%</div>
+              <div style={{ fontSize: 12, color: '#555' }}>Improved Confidence</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* CATEGORIES */}
       <div className="container">
-        <h2 style={{ textAlign: "center" }}>Interview Categories</h2>
+        <h2 style={{ textAlign: 'center' }}>Interview Categories</h2>
 
         <div className="category-grid">
           {/* ✅ UPDATED NAVIGATION */}
@@ -198,6 +265,46 @@ function Dashboard() {
               <p>Link your face to your account</p>
             </div>
           )}
+        </div>
+      </div>
+      
+      {/* FEATURES */}
+      <div className="mock-section">
+        <div className="section-title">Why APIS</div>
+
+        <div className="mock-grid">
+          <div className="mock-card">
+            <div className="card-top">
+              <div>
+                <h4>AI Feedback</h4>
+                <p style={{ marginTop: 6 }}>Receive automated feedback on clarity, pace and content.</p>
+              </div>
+              <div className="icon-circle">🤖</div>
+            </div>
+            <div className="card-footer">Actionable suggestions after every mock session.</div>
+          </div>
+
+          <div className="mock-card">
+            <div className="card-top">
+              <div>
+                <h4>Realistic Mock Interviews</h4>
+                <p style={{ marginTop: 6 }}>Simulate HR, technical and behavioral rounds with scoring.</p>
+              </div>
+              <div className="icon-circle">🎯</div>
+            </div>
+            <div className="card-footer">Structured prompts and timeboxed answers.</div>
+          </div>
+
+          <div className="mock-card">
+            <div className="card-top">
+              <div>
+                <h4>Face Verification</h4>
+                <p style={{ marginTop: 6 }}>Securely link your identity for proctored sessions.</p>
+              </div>
+              <div className="icon-circle">🛡️</div>
+            </div>
+            <div className="card-footer">Simple registration, privacy-first design.</div>
+          </div>
         </div>
       </div>
 

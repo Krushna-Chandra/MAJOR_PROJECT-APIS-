@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
 
 import hrImg from "../assets/hr.png";
-import mistakeImg from "../assets/mistake.png"; // ✅ Add one illustration image
+import mistakeImg from "../assets/mistake.png";
 
 function HRInterview() {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ function HRInterview() {
 
           <button
             className="mock-btn"
-            onClick={() => navigate("/instructions")}
+            onClick={() => navigate("/topics/hr")}
           >
             Start HR Mock Interview →
           </button>
@@ -49,7 +49,7 @@ function HRInterview() {
 
           <button
             className="small-start-btn"
-            onClick={() => navigate("/instructions")}
+            onClick={() => navigate("/topics/hr")}
           >
             Start HR Mock Interview →
           </button>
@@ -99,19 +99,19 @@ function HRInterview() {
           {/* Card 3 */}
           <div className="mock-card pro-card">
             <div className="card-top">
-              <div className="icon-circle">🎧</div>
+              <div className="icon-circle">👔</div>
 
               <div className="chip-row">
-                <span className="chip blue">Full Session</span>
-                <span className="chip violet">Premium</span>
+                <span className="chip blue">Pro</span>
+                <span className="chip pink">Advanced</span>
               </div>
             </div>
 
-            <h3>Full HR Mock Interview</h3>
-            <p>Complete HR simulation with AI evaluation.</p>
+            <h3>Advanced HR Scenario</h3>
+            <p>Master tricky HR questions like salary discussions.</p>
 
             <div className="card-footer">
-              Report Included • Confidence Score
+              Premium Interview Prep • Proactive Tips
             </div>
           </div>
         </div>
@@ -122,15 +122,15 @@ function HRInterview() {
         <div>
           <h2>⚠ Common Mistakes</h2>
           <ul>
-            <li>Giving unnecessarily long answers</li>
-            <li>Lacking structure in your responses</li>
-            <li>Sounding too nervous or unsure</li>
+            <li>Speaking too fast or with unclear pronunciation</li>
+            <li>Not preparing specific examples beforehand</li>
+            <li>Failing to research the company and role</li>
           </ul>
         </div>
 
         <img
           src={mistakeImg}
-          alt="Mistakes Illustration"
+          alt="HR Mistakes Illustration"
           className="mistake-img"
         />
       </div>

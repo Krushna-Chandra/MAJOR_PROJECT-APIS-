@@ -8,6 +8,7 @@ import Instructions from "./pages/Instructions";
 import Permissions from "./pages/Permissions";
 import Interview from "./pages/Interview";
 import EditProfile from "./pages/EditProfile";
+import Topics from "./pages/Topics";
 
 /* FACE AUTH PAGES */
 import Register from "./pages/Register";
@@ -54,6 +55,16 @@ function App() {
           element={
             <ProtectedRoute>
               <BehavioralInterview />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* TOPICS ROUTE */}
+        <Route
+          path="/topics/:category"
+          element={
+            <ProtectedRoute>
+              <Topics />
             </ProtectedRoute>
           }
         />
